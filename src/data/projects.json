@@ -4,10 +4,10 @@
     {
       "title": "The Offseason",
       "status": "In development",
-      "summary": "A free platform for running sports leagues — standings, brackets and player stats in one place.",
-      "tags": ["Standings", "Brackets", "Player stats"],
+      "summary": "A free platform for running recreational sports leagues — schedules, standings, brackets and player stats in one place.",
+      "tags": ["Scheduling", "Standings", "Brackets", "Player stats"],
       "role": "Design & engineering",
-      "stack": "[Stack]",
+      "stack": "Next.js, React, TypeScript, Tailwind CSS, Firebase",
       "year": "2026",
       "links": [
         { "label": "Visit the-offseason.vercel.app", "href": "https://the-offseason.vercel.app/", "primary": true },
