@@ -1,6 +1,3 @@
 {
-  "_readme": "Optional. Keyed by file name. Anything here overrides what's read from the photo's EXIF. Photos not listed still show up.",
-  "placeholder-01.jpg": { "title": "[Title]", "place": "[Place]" },
-  "placeholder-02.jpg": { "title": "[Title]", "place": "[Place]" },
-  "placeholder-03.jpg": { "title": "[Title]", "place": "[Place]" }
+  "_readme": "Optional. Keyed by file name. Anything here overrides what's read from the photo's EXIF. Photos not listed still show up."
 }
