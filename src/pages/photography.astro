@@ -1,0 +1,194 @@
+---
+import Base from '../layouts/Base.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import ContactSheet from '../components/ContactSheet.astro';
+import { site } from '../data/site';
+import { getDigitalPhotos, getFilmRolls } from '../lib/photos';
+
+const digital = await getDigitalPhotos();
+const rolls = getFilmRolls();
+const filmCount = rolls.reduce((n, r) => n + r.frames.length, 0);
+const pad = (n: number) => String(n).padStart(2, '0');
+const tabs = [
+  { id: 'all', label: 'All', count: digital.length + filmCount },
+  { id: 'digital', label: 'Digital', count: digital.length },
+  { id: 'film', label: 'Film', count: filmCount },
+];
+---
+
+<Base
+  current="photography"
+  title="Photographs — Ferras"
+  description="Digital and 35mm film photographs by Ferras. Film developed and scanned at home."
+>
+  <section class="hero">
+    <div class="stack">
+      <p class="mono accent">03 / Photography — Archive</p>
+      <h1 class="display title">Photo<em>graphs.</em></h1>
+    </div>
+    <div class="stack">
+      <p class="lede">
+        Digital, mostly on a Sony a6000. Film on 35mm — developed in my kitchen and camera-scanned, dust and all.
+      </p>
+      <dl class="facts">
+        {site.gear.map((g) => <div><dt>{g.label}</dt><dd>{g.value}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <div class="filters" role="group" aria-label="Filter photographs" data-filters hidden>
+    {
+      tabs.map((t, i) => (
+        <button type="button" class="tab mono" data-filter={t.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {t.label}
+          <span>{pad(t.count)}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    digital.length > 0 && (
+      <section class="group" data-kind="digital" aria-labelledby="digital-h">
+        <div class="group-head">
+          <h2 id="digital-h" class="display">Digital</h2>
+          <p class="mono muted">{pad(digital.length)} frames · newest first</p>
+        </div>
+        <div class="masonry">
+          {digital.map((p) => <PhotoFrame photo={p} sizes="(min-width: 1280px) 400px, (min-width: 700px) 45vw, 100vw" />)}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    rolls.length > 0 && (
+      <section class="group" data-kind="film" aria-labelledby="film-h">
+        <div class="group-head">
+          <h2 id="film-h" class="display">Film</h2>
+          <p class="mono muted">35mm · C-41 · home-developed</p>
+        </div>
+        <div class="rolls">
+          {[...rolls].reverse().map((r) => <ContactSheet roll={r} />)}
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<script>
+  // Progressive enhancement: everything is visible without JS.
+  const bar = document.querySelector<HTMLElement>('[data-filters]');
+  if (bar) {
+    bar.hidden = false;
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-kind]')];
+    const apply = (id: string) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === id)));
+      groups.forEach((g) => (g.hidden = id !== 'all' && g.dataset.kind !== id));
+      history.replaceState(null, '', id === 'all' ? location.pathname : `#${id}`);
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+    const initial = location.hash.slice(1);
+    if (buttons.some((b) => b.dataset.filter === initial)) apply(initial);
+  }
+</script>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 40px 72px;
+    align-items: end;
+    padding: clamp(56px, 8vw, 96px) 0 64px;
+  }
+  .hero > .stack:first-child {
+    grid-column: 1 / -1;
+  }
+  .hero > .stack:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 24px 72px;
+    align-items: end;
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .title {
+    font-size: clamp(80px, 11vw, 168px);
+    line-height: 0.85;
+    letter-spacing: -0.025em;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .filters[hidden] {
+    display: none;
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 20px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--rule-strong);
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .tab span {
+    opacity: 0.6;
+  }
+  .tab:hover {
+    border-color: var(--ink);
+  }
+  .tab[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 56px 0 72px;
+  }
+  .group[hidden] {
+    display: none;
+  }
+  .group-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px 24px;
+  }
+  .group-head h2 {
+    font-size: 48px;
+    line-height: 1;
+  }
+  .group-head p {
+    font-size: 11px;
+  }
+  .masonry {
+    columns: 3 300px;
+    column-gap: 20px;
+  }
+  .masonry > :global(*) {
+    break-inside: avoid;
+    margin-bottom: 28px;
+  }
+  .rolls {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+</style>

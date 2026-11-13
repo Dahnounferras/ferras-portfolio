@@ -1,0 +1,38 @@
+---
+interface Props {
+  index: number;
+  line: string;
+}
+const { index, line } = Astro.props;
+---
+
+<div class="slot">
+  <p class="mono muted">Project {String(index).padStart(2, '0')}</p>
+  <div class="txt">
+    <p class="display big">Unexposed.</p>
+    <p class="muted">{line}</p>
+  </div>
+</div>
+
+<style>
+  .slot {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px;
+    border: 1px dashed var(--rule-strong);
+  }
+  .txt {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 15px;
+  }
+  .big {
+    font-style: italic;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--ink-soft);
+  }
+</style>

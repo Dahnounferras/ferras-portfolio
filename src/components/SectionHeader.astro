@@ -1,0 +1,36 @@
+---
+interface Props {
+  index: string; // "01 / Work"
+  title: string;
+  em: string; // italic, muted second line
+  lede?: string;
+  level?: 'h1' | 'h2';
+}
+const { index, title, em, lede, level = 'h2' } = Astro.props;
+const Heading = level;
+---
+
+<div class="head">
+  <div class="stack">
+    <p class="mono accent">{index}</p>
+    <Heading class="display title">{title}<br /><em>{em}</em></Heading>
+  </div>
+  {lede && <p class="lede">{lede}</p>}
+</div>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 24px 72px;
+    align-items: end;
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .title {
+    font-size: clamp(52px, 7vw, 96px);
+  }
+</style>

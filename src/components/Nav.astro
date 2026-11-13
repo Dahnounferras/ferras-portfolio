@@ -1,0 +1,71 @@
+---
+interface Props {
+  current?: 'home' | 'photography';
+}
+const { current = 'home' } = Astro.props;
+const links = [
+  { n: '01', label: 'Work', href: '/#work' },
+  { n: '02', label: 'Projects', href: '/#projects' },
+  { n: '03', label: 'Photography', href: '/photography', key: 'photography' },
+  { n: '04', label: 'Contact', href: '/#contact' },
+];
+---
+
+<header class="nav wrap">
+  <div class="bar">
+    <a class="logo" href="/">Ferras<span class="accent">.</span></a>
+    <nav aria-label="Primary">
+      {
+        links.map((l) => (
+          <a
+            class="mono"
+            href={l.href}
+            aria-current={l.key === current ? 'page' : undefined}
+          >
+            <span class="n">{l.n}</span>
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<style>
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px 32px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--serif);
+    font-size: 30px;
+    line-height: 1;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    letter-spacing: 0.08em;
+  }
+  .n {
+    color: var(--muted);
+  }
+  [aria-current='page'],
+  [aria-current='page'] .n {
+    color: var(--accent);
+  }
+</style>

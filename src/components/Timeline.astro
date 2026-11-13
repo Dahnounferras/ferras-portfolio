@@ -1,0 +1,136 @@
+---
+import { buildTimeline, type Role } from '../lib/timeline';
+
+interface Props {
+  roles: Role[];
+}
+const t = buildTimeline(Astro.props.roles);
+const total = t.roles.length;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<div class="timeline" style={`--month: ${t.monthStep}%`}>
+  <div class="row axis" aria-hidden="true">
+    <div class="info"></div>
+    <div class="track ticks mono">
+      {t.ticks.map((tick) => <span style={`left: ${tick.left}%`}>{tick.label}</span>)}
+      <span class="now accent">NOW</span>
+    </div>
+  </div>
+
+  <ol>
+    {
+      t.roles.map((r, i) => (
+        <li class="row">
+          <div class="info">
+            <span class:list={['mono fr', r.current ? 'accent' : 'muted']}>FR.{pad(total - i)}</span>
+            <div class="meta">
+              <h3 class="display role">{r.title}</h3>
+              <p class="mono muted dates">
+                {r.range} · {r.duration}
+              </p>
+            </div>
+          </div>
+          <div class="track grid" role="img" aria-label={`${r.title}: ${r.range}`}>
+            <span class:list={['bar', { current: r.current, first: i === total - 1 }]} style={`left: ${r.left}%; width: ${r.width}%`} />
+            {r.current && <span class="dot pulse" />}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="mono muted note">Axis: {t.axisLabel} · one tick per month · bars to scale</p>
+</div>
+
+<style>
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 40px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .axis {
+    padding: 0 0 14px;
+  }
+  .info {
+    flex: 1 1 380px;
+    display: flex;
+    gap: 28px;
+    align-items: baseline;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .role {
+    font-size: clamp(32px, 3.4vw, 40px);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .dates {
+    letter-spacing: 0.06em;
+  }
+  .track {
+    flex: 2 1 420px;
+    position: relative;
+  }
+  .ticks {
+    height: 16px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .ticks span {
+    position: absolute;
+    white-space: nowrap;
+  }
+  .ticks .now {
+    right: 0;
+  }
+  .grid {
+    height: 40px;
+    background: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px var(--month));
+  }
+  .bar {
+    position: absolute;
+    top: 15px;
+    height: 10px;
+    background: var(--ink);
+  }
+  .bar.first {
+    background: var(--muted);
+  }
+  .bar.current {
+    background: var(--accent);
+  }
+  .dot {
+    position: absolute;
+    right: -5px;
+    top: 12px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .note {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: none;
+  }
+  @media (max-width: 520px) {
+    .info {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+</style>

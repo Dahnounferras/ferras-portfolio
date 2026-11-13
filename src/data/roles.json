@@ -1,0 +1,10 @@
+{
+  "company": "Bandwidth",
+  "since": "2023",
+  "blurb": "Three roles at a Tier 1 communications platform, from summer intern to Software Engineer II.",
+  "roles": [
+    { "title": "Software Engineer Intern", "start": "2023-05-01", "end": "2023-07-31" },
+    { "title": "Software Engineer I", "start": "2024-07-01", "end": "2026-03-01" },
+    { "title": "Software Engineer II", "start": "2026-03-01", "end": null }
+  ]
+}

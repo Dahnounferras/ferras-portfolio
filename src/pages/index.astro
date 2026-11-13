@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Timeline from '../components/Timeline.astro';
+import ProjectFeature from '../components/ProjectFeature.astro';
+import UnexposedSlot from '../components/UnexposedSlot.astro';
+import ContactSheet from '../components/ContactSheet.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import { site } from '../data/site';
+import work from '../data/roles.json';
+import projectData from '../data/projects.json';
+import { getDigitalPhotos, getFilmRolls } from '../lib/photos';
+import portrait from '../assets/portrait.jpg';
+
+const digital = (await getDigitalPhotos()).slice(0, 3);
+const roll = getFilmRolls()[0];
+const projects = projectData.projects;
+const emptySlots = Math.max(projectData.slots - projects.length, 0);
+const slotLines = ['Next side project — loading.', 'Still in the canister.', 'Waiting on the right light.'];
+---
+
+<Base current="home">
+  <section class="hero" id="top">
+    <div class="intro">
+      <p class="mono muted">Portfolio — Vol. 01 / {new Date().getFullYear()}</p>
+      <h1 class="display name">{site.name}<span class="accent">.</span></h1>
+      <p class="hello">{site.intro}</p>
+      <dl class="facts">
+        {site.facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+      </dl>
+    </div>
+    <figure class="portrait">
+      <div class="crop">
+        <Image src={portrait} alt={`Portrait of ${site.name}`} widths={[400, 800, 1200]} sizes="(min-width: 1000px) 460px, 100vw" loading="eager" fetchpriority="high" />
+        <span class="mark tl" aria-hidden="true"></span>
+        <span class="mark tr" aria-hidden="true"></span>
+        <span class="mark bl" aria-hidden="true"></span>
+        <span class="mark br" aria-hidden="true"></span>
+      </div>
+      <figcaption class="mono muted">
+        {site.portraitCaption.map((c) => <span>{c}</span>)}
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="work" class="section">
+    <SectionHeader index="01 / Work" title={`${work.company},`} em={`${work.since} — now.`} lede={work.blurb} />
+    <Timeline roles={work.roles} />
+  </section>
+
+  <section id="projects" class="section">
+    <SectionHeader
+      index="02 / Projects"
+      title="Side projects,"
+      em="still developing."
+      lede="Things I build on my own time. One is on the bench right now; the rest of the roll is still unexposed."
+    />
+    {projects.map((p, i) => <ProjectFeature index={i + 1} project={p} />)}
+    {
+      emptySlots > 0 && (
+        <div class="slots">
+          {Array.from({ length: emptySlots }, (_, i) => (
+            <UnexposedSlot index={projects.length + i + 1} line={slotLines[i % slotLines.length]} />
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <section id="photography" class="section">
+    <SectionHeader
+      index="03 / Photography"
+      title="Light,"
+      em="two ways."
+      lede="Digital for the everyday. 35mm film for the frames worth waiting on — developed and scanned at home."
+    />
+    {roll && <ContactSheet roll={roll} limit={5} layout="strip" />}
+    <div class="digital">
+      {digital.map((p) => <PhotoFrame photo={p} ratio="4 / 5" />)}
+    </div>
+    <a class="btn btn--line archive" href="/photography">Enter the archive <span aria-hidden="true">→</span></a>
+  </section>
+
+  <section id="contact" class="section contact">
+    <p class="mono accent">04 / Contact</p>
+    <h2 class="display hello-big">Say hello<em class="accent">.</em></h2>
+    <div class="reach">
+      <a class="email" href={site.email.startsWith('[') ? '#contact' : `mailto:${site.email}`}>{site.email}</a>
+      <nav aria-label="Elsewhere" class="elsewhere">
+        {
+          site.links.map((l) => (
+            <a class="mono" href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined}>
+              {l.label} ↗
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(460px, 100%), 1fr));
+    gap: 56px 72px;
+    align-items: end;
+    padding: clamp(56px, 8vw, 96px) 0 clamp(80px, 9vw, 120px);
+  }
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .name {
+    font-size: clamp(96px, 14vw, 208px);
+    line-height: 0.82;
+    letter-spacing: -0.025em;
+  }
+  .name .accent {
+    font-style: italic;
+  }
+  .hello {
+    max-width: 31ch;
+    font-size: clamp(19px, 1.8vw, 22px);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  .portrait {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-self: end;
+    width: 100%;
+    max-width: 460px;
+  }
+  .crop {
+    position: relative;
+  }
+  .crop :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background: var(--surface);
+  }
+  .mark {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: var(--ink-soft);
+    border-style: solid;
+    border-width: 0;
+    opacity: 0.7;
+  }
+  .tl { top: 16px; left: 16px; border-top-width: 1px; border-left-width: 1px; }
+  .tr { top: 16px; right: 16px; border-top-width: 1px; border-right-width: 1px; }
+  .bl { bottom: 16px; left: 16px; border-bottom-width: 1px; border-left-width: 1px; }
+  .br { bottom: 16px; right: 16px; border-bottom-width: 1px; border-right-width: 1px; }
+  .portrait figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 16px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(48px, 6vw, 72px);
+    padding: var(--section-y) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 24px;
+  }
+  .digital {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 20px;
+  }
+  .archive {
+    align-self: flex-start;
+    min-height: 52px;
+  }
+
+  .contact {
+    gap: 48px;
+    padding-bottom: 72px;
+  }
+  .hello-big {
+    font-size: clamp(72px, 11vw, 168px);
+    line-height: 0.85;
+    letter-spacing: -0.025em;
+  }
+  .reach {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .email {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: clamp(22px, 2.4vw, 32px);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
+    overflow-wrap: anywhere;
+  }
+  .elsewhere {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 32px;
+  }
+  .elsewhere a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+import Sprockets from './Sprockets.astro';
+import type { FilmRoll } from '../lib/photos';
+
+interface Props {
+  roll: FilmRoll;
+  /** Limit frames (e.g. the home-page preview strip). */
+  limit?: number;
+  /** "strip" = one row that shrinks to fit; "sheet" = wrapping grid. */
+  layout?: 'strip' | 'sheet';
+}
+const { roll, limit, layout = 'sheet' } = Astro.props;
+const frames = limit ? roll.frames.slice(0, limit) : roll.frames;
+const meta = [roll.stock, roll.camera, roll.date].filter(Boolean).join(' · ');
+---
+
+<article class:list={['roll', layout]}>
+  <header class="mono">
+    <span>Film — {roll.title}</span>
+    <span class="muted">{meta}</span>
+  </header>
+  <div class="film">
+    <Sprockets />
+    <div class="frames" style={`--n: ${frames.length}`}>
+      {
+        frames.map((f) => (
+          <figure>
+            <Image
+              src={f.image}
+              alt={`${roll.title}, frame ${f.number}`}
+              widths={[320, 640, 960]}
+              sizes={layout === 'strip' ? '(min-width: 1280px) 240px, 20vw' : '(min-width: 1280px) 300px, (min-width: 640px) 45vw, 100vw'}
+              loading="lazy"
+            />
+            <figcaption class="mono accent">▸ {f.number}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <Sprockets />
+  </div>
+  {roll.notes && layout === 'sheet' && <p class="mono muted notes">{roll.notes}</p>}
+</article>
+
+<style>
+  .roll {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    font-size: 11px;
+  }
+  .film {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0;
+    background: var(--strip);
+  }
+  .frames {
+    display: grid;
+    gap: 10px;
+    padding: 0 10px;
+  }
+  .roll.sheet .frames {
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  }
+  .strip .frames {
+    grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr));
+  }
+  @media (max-width: 640px) {
+    .strip .frames {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .strip figure:nth-child(n + 4) {
+      display: none;
+    }
+  }
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  figure :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    background: var(--surface);
+  }
+  figcaption {
+    font-size: 11px;
+  }
+  .notes {
+    font-size: 11px;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+</style>

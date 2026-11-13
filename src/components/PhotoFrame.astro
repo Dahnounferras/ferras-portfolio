@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import { captionFor, type DigitalPhoto } from '../lib/photos';
+
+interface Props {
+  photo: DigitalPhoto;
+  /** Crop to a fixed ratio (home preview); omit to keep the original shape. */
+  ratio?: string;
+  sizes?: string;
+}
+const { photo: p, ratio, sizes = '(min-width: 1280px) 400px, (min-width: 700px) 45vw, 100vw' } = Astro.props;
+const caption = captionFor(p);
+const code = p.file.replace(/\.[^.]+$/, '').toUpperCase();
+const label = p.title.toUpperCase() === code ? code : `${code} — ${p.title}`;
+---
+
+<figure class="frame">
+  <Image
+    src={p.image}
+    alt={[p.title, p.place].filter(Boolean).join(', ')}
+    widths={[400, 800, 1200]}
+    sizes={sizes}
+    loading="lazy"
+    style={ratio ? `aspect-ratio: ${ratio}; object-fit: cover` : undefined}
+  />
+  <figcaption class="mono">
+    <span class="t">{label}</span>
+    {caption && <span class="muted">{caption}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .frame {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .frame :global(img) {
+    width: 100%;
+    background: var(--surface);
+  }
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: none;
+  }
+  .t {
+    color: var(--ink-soft);
+  }
+</style>

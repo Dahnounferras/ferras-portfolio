@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found — Ferras">
+  <section class="lost">
+    <p class="mono accent">Error 404</p>
+    <h1 class="display">Overexposed<em>.</em></h1>
+    <p class="lede">Nothing developed at this address. The frame you were after may have been moved or never shot.</p>
+    <a class="btn btn--line" href="/">Back to index <span aria-hidden="true">→</span></a>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: clamp(80px, 14vw, 180px) 0;
+  }
+  h1 {
+    font-size: clamp(72px, 12vw, 176px);
+    line-height: 0.85;
+  }
+</style>

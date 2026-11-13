@@ -1,0 +1,173 @@
+---
+interface Props {
+  index: number;
+  project: {
+    title: string;
+    status: string;
+    summary: string;
+    tags: string[];
+    role: string;
+    stack: string;
+    year: string;
+    links: { label: string; href: string; primary?: boolean }[];
+  };
+}
+const { index, project: p } = Astro.props;
+---
+
+<article class="feature">
+  <div class="visual">
+    <!-- Abstract bracket — swap for a screenshot when the app has one -->
+    <div class="bracket" aria-hidden="true">
+      <div class="col c1"><span></span><span></span><span></span><span></span></div>
+      <div class="col c2"><span></span><span></span></div>
+      <div class="col c3"><span></span></div>
+      <div class="winner"><span><i></i></span></div>
+    </div>
+    <span class="mono tag">[ Screenshot ]</span>
+  </div>
+  <div class="body">
+    <div class="top">
+      <p class="mono muted status"><span class="dot pulse"></span>Project {String(index).padStart(2, '0')} · {p.status}</p>
+      <h3 class="display name">{p.title}</h3>
+      <p class="lede">{p.summary}</p>
+      <ul class="tags mono">{p.tags.map((t) => <li>{t}</li>)}</ul>
+    </div>
+    <div class="bottom">
+      <dl class="facts">
+        <div><dt>Role</dt><dd>{p.role}</dd></div>
+        <div><dt>Stack</dt><dd>{p.stack}</dd></div>
+        <div><dt>Year</dt><dd>{p.year}</dd></div>
+      </dl>
+      <div class="links">
+        {
+          p.links.map((l) => (
+            <a class:list={['btn', { 'btn--solid': l.primary }]} href={l.href}>
+              {l.label} <span aria-hidden="true">→</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .feature {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(520px, 100%), 1fr));
+    border: 1px solid var(--rule);
+  }
+  .visual {
+    position: relative;
+    min-height: 420px;
+    background: var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+  }
+  .bracket {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+  }
+  .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .col span {
+    border: 1px solid var(--teal-line);
+    border-left: none;
+  }
+  .c1 {
+    gap: 14px;
+  }
+  .c1 span {
+    height: 26px;
+    border-left: 1px solid var(--teal-line);
+    border-right: none;
+  }
+  .c2 {
+    gap: 54px;
+  }
+  .c2 span {
+    height: 54px;
+  }
+  .c3 span {
+    height: 108px;
+  }
+  .winner {
+    flex: 0 0 64px;
+    display: flex;
+    justify-content: center;
+  }
+  .winner span {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    display: grid;
+    place-items: center;
+  }
+  .winner i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+  .tag {
+    position: absolute;
+    left: 20px;
+    bottom: 16px;
+    font-size: 11px;
+    color: var(--teal-ink);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    padding: clamp(28px, 4vw, 56px);
+  }
+  .top,
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .status .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .name {
+    font-size: clamp(48px, 5vw, 72px);
+  }
+  .tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .tags li {
+    padding: 8px 12px;
+    border: 1px solid var(--rule-strong);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>

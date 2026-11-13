@@ -1,0 +1,22 @@
+---
+// A row of film sprocket holes. Purely decorative.
+const holes = Array.from({ length: 32 });
+---
+
+<div class="holes" aria-hidden="true">{holes.map(() => <span />)}</div>
+
+<style>
+  .holes {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 12px;
+    overflow: hidden;
+  }
+  span {
+    flex: 0 0 14px;
+    height: 9px;
+    border-radius: 2px;
+    background: var(--bg);
+  }
+</style>
