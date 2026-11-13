@@ -14,6 +14,7 @@
  */
 import type { ImageMetadata } from 'astro';
 import exifr from 'exifr';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 type ImageModule = { default: ImageMetadata };
@@ -93,8 +94,10 @@ function shutter(t?: number) {
 
 async function readExif(globKey: string) {
   try {
-    const file = path.join(process.cwd(), globKey);
-    const x = await exifr.parse(file, {
+    // Read the whole file ourselves: exifr's own chunked file reader can leave
+    // a FileHandle open, which Node 24+ turns into a hard build error.
+    const buffer = await readFile(path.join(process.cwd(), globKey));
+    const x = await exifr.parse(buffer, {
       pick: ['Make', 'Model', 'LensModel', 'FNumber', 'ExposureTime', 'ISO', 'FocalLength', 'DateTimeOriginal'],
       gps: false,
     });
