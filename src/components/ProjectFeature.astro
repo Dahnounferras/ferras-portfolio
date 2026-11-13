@@ -41,8 +41,8 @@ const { index, project: p } = Astro.props;
       </dl>
       <div class="links">
         {
-          p.links.map((l) => (
-            <a class:list={['btn', { 'btn--solid': l.primary }]} href={l.href}>
+          p.links.filter((l) => l.href !== '#').map((l) => (
+            <a class:list={['btn', { 'btn--solid': l.primary }]} href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel={l.href.startsWith('http') ? 'noopener' : undefined}>
               {l.label} <span aria-hidden="true">→</span>
             </a>
           ))

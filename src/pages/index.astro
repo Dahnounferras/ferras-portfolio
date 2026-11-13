@@ -89,7 +89,7 @@ const slotLines = ['Next side project — loading.', 'Still in the canister.', '
       <a class="email" href={site.email.startsWith('[') ? '#contact' : `mailto:${site.email}`}>{site.email}</a>
       <nav aria-label="Elsewhere" class="elsewhere">
         {
-          site.links.map((l) => (
+          site.links.filter((l) => l.href !== '#').map((l) => (
             <a class="mono" href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined}>
               {l.label} ↗
             </a>

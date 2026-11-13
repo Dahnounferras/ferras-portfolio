@@ -10,7 +10,7 @@
       "stack": "[Stack]",
       "year": "2026",
       "links": [
-        { "label": "Visit [Live URL]", "href": "#", "primary": true },
+        { "label": "Visit the-offseason.vercel.app", "href": "https://the-offseason.vercel.app/", "primary": true },
         { "label": "Case study", "href": "#" }
       ]
     }

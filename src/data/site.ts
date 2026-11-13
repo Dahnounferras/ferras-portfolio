@@ -13,12 +13,12 @@ export const site = {
     { label: 'Stack', value: 'Java / Spring Boot' },
     { label: 'Shooting', value: 'Digital & 35mm film' },
   ],
-  portraitCaption: ['Fig. 01 — Self-portrait', '[Camera · Lens · Film]'],
-  email: '[your@email.com]',
+  portraitCaption: ['Fig. 01 — Grand Teton, 2026', 'Sony a6000 · 16mm · f/5.6 · 1/125s'],
+  email: 'ferras.dahnoun@gmail.com',
   links: [
     { label: 'GitHub', href: 'https://github.com/Dahnounferras' },
-    { label: 'LinkedIn', href: '#' },
-    { label: 'Instagram', href: '#' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ferras-dahnoun-6b20481b8/' },
+    { label: 'Instagram', href: 'https://www.instagram.com/dahnounferras/' },
     { label: 'Résumé', href: '#' },
   ],
   gear: [
