@@ -1,0 +1,3 @@
+#!/bin/sh
+# Strip GPS location from any staged photos before they are committed.
+node scripts/strip-gps.mjs --staged || exit 1

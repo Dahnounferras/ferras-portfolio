@@ -6,7 +6,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "placeholders": "bash scripts/placeholders.sh"
+    "placeholders": "bash scripts/placeholders.sh",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "strip-gps": "node scripts/strip-gps.mjs"
   },
   "dependencies": {
     "@fontsource/instrument-serif": "^5.3.0",
@@ -20,5 +22,8 @@
   "private": true,
   "engines": {
     "node": ">=22.23.4"
+  },
+  "devDependencies": {
+    "piexifjs": "^1.0.6"
   }
 }
