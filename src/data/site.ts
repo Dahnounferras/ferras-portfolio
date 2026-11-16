@@ -23,7 +23,7 @@ export const site = {
   ],
   gear: [
     { label: 'Digital', value: 'Sony a6000' },
-    { label: 'Film', value: '[Film camera]' },
+    { label: 'Film', value: 'Canon EOS Rebel G' },
     { label: 'Edit', value: 'Darktable' },
   ],
 };

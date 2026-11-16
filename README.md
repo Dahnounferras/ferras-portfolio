@@ -38,7 +38,7 @@ Anything there overrides EXIF (e.g. `"lens": "Helios 44-2"` for a manual lens th
 plus a `roll.json`:
 
 ```json
-{ "title": "Roll 03", "stock": "Portra 400", "camera": "Pentax K1000", "date": "Nov 2026", "notes": "optional" }
+{ "title": "Roll 03", "stock": "Portra 400", "camera": "Canon EOS Rebel G", "date": "Nov 2026", "notes": "optional" }
 ```
 
 Frames are ordered by file name and get film-edge numbers (1, 1A, 2, 2A…). Newest roll
