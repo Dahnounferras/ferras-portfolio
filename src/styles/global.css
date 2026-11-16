@@ -7,14 +7,14 @@
 
 :root {
   /* Ground & ink */
-  --bg: #2a211b;
-  --surface: #382c24;
-  --strip: #110d0a;
-  --rule: #43362d;
-  --rule-strong: #5c4c40;
-  --ink: #f2ece3;
-  --ink-soft: #d9cfc2;
-  --muted: #a8998a;
+  --bg: #1f2630;
+  --surface: #29313c;
+  --strip: #0c0f13;
+  --rule: #343d49;
+  --rule-strong: #4a5462;
+  --ink: #eceef1;
+  --ink-soft: #cdd2d9;
+  --muted: #96a0ad;
 
   /* Safelight accent — swap here to restyle everything */
   --accent: #e8553f;
